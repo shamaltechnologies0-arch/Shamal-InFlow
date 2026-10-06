@@ -1,0 +1,51 @@
+{
+  "name": "shamal-inflow",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=\"--no-deprecation --import ./scripts/mongo-dns-preload.mjs\" next dev",
+    "build": "cross-env NODE_OPTIONS=\"--no-deprecation --import ./scripts/mongo-dns-preload.mjs\" next build",
+    "start": "cross-env NODE_OPTIONS=\"--no-deprecation --import ./scripts/mongo-dns-preload.mjs\" next start",
+    "lint": "eslint",
+    "seed": "cross-env NODE_OPTIONS=\"--no-deprecation --import ./scripts/mongo-dns-preload.mjs\" payload seed",
+    "seed:batteries": "cross-env NODE_OPTIONS=\"--no-deprecation --import ./scripts/mongo-dns-preload.mjs\" payload run src/scripts/seed-batteries.ts",
+    "payload": "cross-env NODE_OPTIONS=\"--no-deprecation --import ./scripts/mongo-dns-preload.mjs\" payload",
+    "generate:types": "cross-env NODE_OPTIONS=\"--no-deprecation --import ./scripts/mongo-dns-preload.mjs\" payload generate:types",
+    "generate:importmap": "cross-env NODE_OPTIONS=\"--no-deprecation --import ./scripts/mongo-dns-preload.mjs\" payload generate:importmap"
+  },
+  "dependencies": {
+    "@payloadcms/db-mongodb": "^3.90.2",
+    "@payloadcms/next": "^3.90.2",
+    "@payloadcms/richtext-lexical": "^3.90.2",
+    "@payloadcms/storage-s3": "^3.90.2",
+    "@payloadcms/ui": "^3.90.2",
+    "@tanstack/react-table": "^9.2.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cross-env": "^10.1.0",
+    "date-fns": "^4.4.0",
+    "graphql": "^16.8.1",
+    "lucide-react": "^1.49.0",
+    "next": "16.3.8",
+    "next-themes": "^0.4.6",
+    "payload": "^3.90.2",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "recharts": "^3.10.1",
+    "sass": "^1.105.1",
+    "sharp": "^0.35.5",
+    "tailwind-merge": "^3.7.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.8",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
