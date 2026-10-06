@@ -48,14 +48,19 @@ export async function loginAction(
       maxAge: tokenExpiration,
     });
   } catch (err) {
-    const message =
-      err instanceof Error && err.message
-        ? err.message
-        : "Invalid email or password.";
+    const message = err instanceof Error && err.message ? err.message : "";
+    if (message.includes("credentials") || message.includes("Invalid")) {
+      return { error: "Invalid email or password." };
+    }
+    if (!process.env.DATABASE_URL) {
+      return {
+        error: "DATABASE_URL is missing on this deployment. Add it in Vercel, then redeploy.",
+      };
+    }
+    console.error("Login database error:", message);
     return {
-      error: message.includes("credentials") || message.includes("Invalid")
-        ? "Invalid email or password."
-        : "Cannot reach database. Check DATABASE_URL / MongoDB Atlas.",
+      error:
+        "Cannot reach MongoDB Atlas. In Atlas open Network Access and allow 0.0.0.0/0, then redeploy.",
     };
   }
 
