@@ -71,13 +71,57 @@ export async function updateUserRoleAction(id: string, role: string) {
     return { error: "You cannot remove your own administrator role." };
   }
 
-  const payload = await getPayloadClient();
-  await payload.update({
-    collection: "users",
-    id,
-    data: { role },
-    overrideAccess: true,
-  });
-  revalidatePath("/administration/users");
-  return { ok: true as const };
+  try {
+    const payload = await getPayloadClient();
+    await payload.update({
+      collection: "users",
+      id,
+      data: { role },
+      overrideAccess: true,
+    });
+    revalidatePath("/administration/users");
+    return { ok: true as const };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to update role.";
+    return { error: message };
+  }
+}
+
+export async function updateUserAction(
+  _prev: UserFormState,
+  formData: FormData,
+): Promise<UserFormState> {
+  const gate = await requireAdmin();
+  if ("error" in gate && gate.error) return { error: gate.error };
+
+  const id = String(formData.get("id") || "");
+  const name = String(formData.get("name") || "").trim();
+  const role = String(formData.get("role") || "");
+  const password = String(formData.get("password") || "");
+
+  if (!id) return { error: "Missing user." };
+  if (!name) return { error: "Name is required." };
+  if (!isUserRole(role)) return { error: "Choose a role." };
+  if (password && password.length < 8) {
+    return { error: "Password must be at least 8 characters." };
+  }
+  if (gate.session.id === id && role !== "admin") {
+    return { error: "You cannot remove your own administrator role." };
+  }
+
+  try {
+    const payload = await getPayloadClient();
+    await payload.update({
+      collection: "users",
+      id,
+      data: password ? { name, role, password } : { name, role },
+      overrideAccess: true,
+    });
+    revalidatePath("/administration/users");
+    revalidatePath("/administration");
+    return { ok: true };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to update user.";
+    return { error: message };
+  }
 }

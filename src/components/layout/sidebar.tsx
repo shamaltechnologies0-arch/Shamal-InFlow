@@ -144,8 +144,8 @@ export function Sidebar({ user }: { user: SessionUser | null }) {
     setOpenGroups((prev) => ({ ...prev, ...groupOpenByPath(pathname) }));
   }, [pathname]);
 
-  const displayName = user?.name ?? "Operator";
-  const displayRole = formatRole(user?.role ?? "viewer");
+  const displayName = user?.name ?? "Not signed in";
+  const displayRole = user ? formatRole(user.role) : "Sign in required";
   const initials = initialsFromName(displayName);
 
   return (
