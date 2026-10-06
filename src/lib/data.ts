@@ -256,7 +256,7 @@ export async function listMaintenance() {
     overrideAccess: true,
   });
 
-  const docs = asDocs(result.docs) as never /*fix */;
+  const docs = asDocs(result.docs);
   const counts = {
     overdue: docs.filter((d) => d.status === "overdue").length,
     scheduled: docs.filter((d) => d.status === "scheduled").length,
@@ -313,7 +313,7 @@ export async function listDocuments() {
     overrideAccess: true,
   });
 
-  const docs = asDocs(result.docs) as never /*fix */;
+  const docs = asDocs(result.docs);
   const counts = {
     flight: docs.filter((d) => d.category === "flight").length,
     pilot: docs.filter((d) => d.category === "pilot").length,
@@ -500,7 +500,7 @@ export async function listMissions() {
     overrideAccess: true,
   });
 
-  const docs = asDocs(result.docs) as never /*fix */;
+  const docs = asDocs(result.docs);
   const statusCounts: Record<string, number> = {};
   for (const d of docs) {
     const s = String(d.status || "draft");
@@ -665,7 +665,7 @@ export async function listInspections() {
     overrideAccess: true,
   });
 
-  const docs = asDocs(result.docs) as never /*fix */;
+  const docs = asDocs(result.docs);
   return {
     counts: {
       overdue: docs.filter((d) => d.status === "overdue").length,

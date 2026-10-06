@@ -1,0 +1,34 @@
+---
+description: Keep Shamal InFlow centered on the UAV operations domain
+alwaysApply: true
+---
+
+# Domain-Driven Design
+
+Shamal InFlow is a UAV operations system. Model the business first. Payload, Next.js, MongoDB, and S3 only store and show that model.
+
+## Language
+
+Use the operational words already in the product: Organization, Project, Mission, Flight, Operator, Aircraft, Battery, Component, Equipment, Inspection, Maintenance, Incident, Document. Do not rename them to generic entities, records, or items.
+
+## Where rules live
+
+- Business rules, invariants, and calculations go in `src/domain/`. Existing behavior in `src/lib/` (such as `completeFlight`) is the domain layer until it is moved.
+- Payload collections in `src/collections/` persist state and relations. They do not decide policy.
+- Server actions in `src/app/actions/` are thin commands: read input, call a domain operation, revalidate.
+- React components render state. They do not compute airworthiness, flight completion, expiry, or compliance.
+
+## Model
+
+- Every operational record belongs to an Organization.
+- Flight is the central aggregate. Completing or importing a flight goes through the flight-completion operation so linked aircraft, battery, and audit state stay consistent.
+- External feeds (DJI and others) are adapters. They map into the canonical flight. They do not own the schema.
+- MongoDB stores operational records. S3 stores file bytes (PDFs, photos, logs). A document record keeps the title, expiry, and storage link only.
+
+```ts
+// BAD — policy buried in a server action
+await payload.update({ collection: "aircraft", id, data: { status: "grounded" } })
+
+// GOOD — name the business operation and keep the rule in the domain layer
+await groundAircraft(payload, { aircraftId, reason, organizationId })
+```
